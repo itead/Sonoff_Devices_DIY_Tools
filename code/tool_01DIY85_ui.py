@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'tool_01DIY85_ui.ui',
+# licensing of 'tool_01DIY85_ui.ui' applies.
+#
+# Created: Tue Apr  9 09:47:41 2019
+#      by: pyside2-uic  running on PySide2 5.12.0
+#
+# WARNING! All changes made in this file will be lost!
+
+from PySide2 import QtCore, QtGui, QtWidgets
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(951, 488)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.ROOT = QtWidgets.QPushButton(self.centralwidget)
+        self.ROOT.setGeometry(QtCore.QRect(830, 60, 111, 31))
+        self.ROOT.setObjectName("ROOT")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(280, 10, 321, 41))
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(32)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.MODIFY_SSID_PASSWORD = QtWidgets.QPushButton(self.centralwidget)
+        self.MODIFY_SSID_PASSWORD.setGeometry(QtCore.QRect(800, 420, 141, 31))
+        self.MODIFY_SSID_PASSWORD.setObjectName("MODIFY_SSID_PASSWORD")
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 60, 671, 31))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pB_ON = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_ON.setObjectName("pB_ON")
+        self.horizontalLayout.addWidget(self.pB_ON)
+        self.pB_OFF = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_OFF.setObjectName("pB_OFF")
+        self.horizontalLayout.addWidget(self.pB_OFF)
+        self.pB_UP_ON = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_UP_ON.setObjectName("pB_UP_ON")
+        self.horizontalLayout.addWidget(self.pB_UP_ON)
+        self.pB_UP_KEEP = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_UP_KEEP.setObjectName("pB_UP_KEEP")
+        self.horizontalLayout.addWidget(self.pB_UP_KEEP)
+        self.pB_UP_OFF = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_UP_OFF.setObjectName("pB_UP_OFF")
+        self.horizontalLayout.addWidget(self.pB_UP_OFF)
+        self.pB_SET_POINT = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pB_SET_POINT.setObjectName("pB_SET_POINT")
+        self.horizontalLayout.addWidget(self.pB_SET_POINT)
+        self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 420, 303, 41))
+        self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.pB_all = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pB_all.setObjectName("pB_all")
+        self.horizontalLayout_2.addWidget(self.pB_all)
+        self.pB_inverse = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pB_inverse.setObjectName("pB_inverse")
+        self.horizontalLayout_2.addWidget(self.pB_inverse)
+        self.pB_cancel = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
+        self.pB_cancel.setObjectName("pB_cancel")
+        self.horizontalLayout_2.addWidget(self.pB_cancel)
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(10, 90, 931, 331))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "MainWindow", None, -1))
+        self.ROOT.setText(QtWidgets.QApplication.translate("MainWindow", "Firmware flash", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "DIY mode tool", None, -1))
+        self.MODIFY_SSID_PASSWORD.setText(QtWidgets.QApplication.translate("MainWindow", "Change SSID & Password", None, -1))
+        self.pB_ON.setText(QtWidgets.QApplication.translate("MainWindow", "ON", None, -1))
+        self.pB_OFF.setText(QtWidgets.QApplication.translate("MainWindow", "OFF", None, -1))
+        self.pB_UP_ON.setText(QtWidgets.QApplication.translate("MainWindow", "Power-on-state-ON", None, -1))
+        self.pB_UP_KEEP.setText(QtWidgets.QApplication.translate("MainWindow", "Power-on-state-KEEP", None, -1))
+        self.pB_UP_OFF.setText(QtWidgets.QApplication.translate("MainWindow", "Power-on-state-OFF", None, -1))
+        self.pB_SET_POINT.setText(QtWidgets.QApplication.translate("MainWindow", "Batch Inching Setting", None, -1))
+        self.pB_all.setText(QtWidgets.QApplication.translate("MainWindow", "Select all", None, -1))
+        self.pB_inverse.setText(QtWidgets.QApplication.translate("MainWindow", "Inverse selection", None, -1))
+        self.pB_cancel.setText(QtWidgets.QApplication.translate("MainWindow", "Cancel selection", None, -1))
+
