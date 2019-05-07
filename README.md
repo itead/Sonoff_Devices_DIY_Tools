@@ -38,4 +38,4 @@ Sonoff Devices DIY Tools is used for SONOFF Devices(Basic R3，RFR3 and Mini) co
 
 
 
-### ...To be continued
+### Welcome Issues
