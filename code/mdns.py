@@ -124,3 +124,23 @@ class MyListener(object):
             info = zeroconf.get_service_info(type=type, name=name)
             current_info["info"] = info
             self.all_info_dict[x] = current_info["info"]
+            
+def main():
+        zeroconf=Zeroconf()
+        listener=MyListener()
+        browser = ServiceBrowser(zeroconf, "_ewelink._tcp.local.",listener= listener)
+        while True:
+             if listener.all_sub_num>0:
+                    dict=listener.all_info_dict.copy()
+                    for x in dict.keys():
+                        info=dict[x]
+                        info=zeroconf.get_service_info(info.type,x)
+                        if info!= None:
+                            data=info.properties
+                            cur_str=str(data)
+                            print(cur_str)
+                time.sleep(0.5)
+
+                
+if __name__ == "__main__":
+    main()
