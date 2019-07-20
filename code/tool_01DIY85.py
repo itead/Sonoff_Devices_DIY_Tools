@@ -7,12 +7,10 @@
 """
 
 
-# 标准库
 import sys
 import time
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-# ui.py文件
 from tool_01DIY85_ui import *
 from mdns import mDNS_BrowserThread, MyListener
 from lan_ewlink_api import *
@@ -31,7 +29,6 @@ class MainWindow(QMainWindow):
         self.thread_number = 0
         self.send_result = {}
         self.ID_list = []
-
         self.table_all_sub = []
         # All device information in the interface list
         self.UI_sub_info = {}
@@ -50,7 +47,7 @@ class MainWindow(QMainWindow):
         # Set the signal function triggered by the table
         self.ui.tableWidget.cellClicked.connect(self.table_check)
         self.show()
-        self.setWindowTitle("DIY tool(v1.0.0)")
+        self.setWindowTitle("DIY tool(v3.3.0)")
         self.ui.pB_ON.clicked.connect(self.set_ON)
         self.ui.pB_OFF.clicked.connect(self.set_OFF)
         self.ui.pB_UP_ON.clicked.connect(self.set_power_up_ON)
@@ -62,6 +59,19 @@ class MainWindow(QMainWindow):
         self.ui.pB_all.clicked.connect(self.check_all)
         self.ui.pB_inverse.clicked.connect(self.check_not)
         self.ui.pB_cancel.clicked.connect(self.out_check)
+        self.ui.pB_info.clicked.connect(self.get_info)
+        self.ui.pB_signal.clicked.connect(self.get_signal)
+
+    def closeEvent(self,event):
+        print("clean all")
+        event.accept()
+        os._exit(0)
+
+    def get_signal(self):
+        self.run_detection(command_num=7,b="null")
+
+    def get_info(self):
+        self.run_detection(command_num=8,b="null")
 
     def set_ON(self):
         """"Sets the device selected by the user to on"""
@@ -116,10 +126,15 @@ class MainWindow(QMainWindow):
             self.run_detection(command_num=5, command_vrg=vrg)
 
     def set_POINT_a_sub(self, sub_id):
-        """Set the inching time of all selected devices by user ."""
+        """
+        Set the inching time of all selected devices by user .
+        :param sub_id: You need to set the device ID for the inching mode
+        :return:
+        """
         # Parses the mDNS to get the inching information to the current device
         # and adds it to the dialog box
         vrg = {}
+        pass
         vrg["pulse"] = "on"
         sub_info = self.mDNS_info_sta[sub_id]
         all_time = sub_info["pulseWidth"]
@@ -138,7 +153,6 @@ class MainWindow(QMainWindow):
             min=min_time, sec=sec_time, pulse=sta, sec_sta=sec_sta)
         set_time_dialog.show()
         ret = set_time_dialog.exec_()
-        print("窗口返回值：", ret)
         if ret != 0:
             all_time = set_time_dialog.all_time()
             print("all_time", all_time)
@@ -152,7 +166,7 @@ class MainWindow(QMainWindow):
             else:
                 vrg["pulse"] = "off"
                 vrg["pulseWidth"] = all_time
-            print("发送：", vrg)
+            # print("send：", vrg)
             self.run_a_dev(sub_id, command_num=5, command_vrg=vrg)
         set_time_dialog.destroy()
 
@@ -190,8 +204,11 @@ class MainWindow(QMainWindow):
     def thread_deal_mDNS_new(self, cur_new_str):
         """
         Used to receive and process information from the mDNS thread
+        :param cur_new_str: Data from the QTthread(mDNS)
+        :return: None
         """
-        # cur_new_str解析  （info.name ip port data）每个参数之间“\n”为间隔
+        # cur_new_str   （info.name ip port data）"\n" is the interval between
+        # each parameter
         new_list = cur_new_str.splitlines()
         name = new_list[0]
         if new_list[1] == "DEL":
@@ -295,6 +312,8 @@ class MainWindow(QMainWindow):
     def change_usr_name(self, sub_name):
         """
         Handle changing names
+        :param sub_name: equipment ID
+        :return:
         """
         new_name, ok = QInputDialog.getText(self, "input name", "name:")
         if ok:
@@ -314,7 +333,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.setRowCount(item_all_num)
         # Set the number of columns(id|Modify the
         # name|ON|OFF|Power-on-state-ON|OFF|KEEP|SET INCH)
-        self.ui.tableWidget.setColumnCount(8)
+        self.ui.tableWidget.setColumnCount(9)
         # Draw table
         for x in self.UI_sub_info.keys():
             # print("get sub_name %s"%x)
@@ -346,6 +365,9 @@ class MainWindow(QMainWindow):
             # Fill in the "Inching" button
             b_inch = QTableWidgetItem("Inching")
             self.ui.tableWidget.setItem(line_num, 7, b_inch)
+			# rssi
+            newresultBItem=QTableWidgetItem(str(sub_sta_info["rssi"]))
+            self.ui.tableWidget.setItem(line_num,8,newresultBItem)
             # Color according to the device information
             if select_state:
                 self.ui.tableWidget.item(
@@ -391,6 +413,8 @@ class MainWindow(QMainWindow):
     def result_to_ui(self, result_str):
         """
         Process the information returned by the thread of execution
+        :param result_str:Data from the QTthread
+        :return: None
         """
         if "END" in result_str:
             # self.ui.pushButton.setDisabled(0)
@@ -406,25 +430,17 @@ class MainWindow(QMainWindow):
             return
         result_list = result_str.split("\n")
         print("The return value is received：", result_list)
-        if result_list[1] is "0":
-            self.send_result[result_list[0]] = "send succeed "
-        elif result_list[1] is "1":
-            self.send_result[result_list[0]
-                             ] = "ERROR：Please check your network connection."
-        elif result_list[1] is "400":
-            self.send_result[result_list[0]
-                             ] = "ERROR：Please check your network connection."
-        elif result_list[1] is "500":
-            self.send_result[result_list[0]
-                             ] = "ERROR：Please check your network connection."
-        else:
-            self.result_ui = True
-            self.send_result[result_list[0]
-                             ] = "ERROR：Please check your network connection."
+		self.send_result[result_list[0]]=eval(result_list[1])
+
 
     def run_detection(self, command_num, **comand_vrg):
-        """Pass the user selected device list and all device
-         information to the thread of execution, which processes it"""
+        """
+        Pass the user selected device list and all device
+         information to the thread of execution, which processes it
+        :param command_num:Order number
+        :param comand_vrg:Parameters required to execute the command
+        :return: None
+        """
         if len(self.select_name) <= 0:
             QMessageBox.information(
                 self,
@@ -455,9 +471,15 @@ class MainWindow(QMainWindow):
                 QMessageBox.Yes)
 
     def run_a_dev(self, sub_id, command_num, **comand_vrg):
-        # Passes the user selected device list and individual device
-        # information to the thread
-        print("run_a_dev传入设备：", sub_id)
+        """
+        Passes the user selected device list and individual device
+        information to the thread
+        :param sub_id: The ID of the target device
+        :param command_num:Order number
+        :param comand_vrg:Parameters required to execute the command
+        :return:None
+        """
+        print("run_a_dev：", sub_id)
         sud_id_tmp = [sub_id]
         dicta = {"info": self.mDNS_info_sta, "select_name_list": sud_id_tmp}
         pass
@@ -466,8 +488,8 @@ class MainWindow(QMainWindow):
         self.result_ui = False
         if self.thread_number <= 0:
             self.thread_number += 1
+
             self.myThread = ThreadForQT(parent=None, **dicta)
-            # 设置信号管关联函数
             self.myThread.run_test_Thread.connect(self.result_to_ui)
             self.myThread.start()
         else:
@@ -508,7 +530,12 @@ class MainWindow(QMainWindow):
         self.select_name = []
 
     def write_log(self, log_data):
-        """Output log file"""
+        """
+        Output log file
+        :param log_data: Log data
+        :return:None
+        """
+
         cur_log = time.strftime(
             "%Y-%m-%d %H:%M:%S",
             time.localtime()) + log_data + "\r\n"
