@@ -5,6 +5,7 @@
 ## Introduction
 
 Sonoff Devices DIY Tools is used for SONOFF Devices(Basic R3，RFR3 and Mini) control via LAN.
+(Only version 3.3.0 is supported)
 
 - Set devices ON and OFF
 
