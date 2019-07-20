@@ -5,6 +5,7 @@
         ThreadForQT(Classes based on QT threads)
 """
 import time
+import time
 import requests
 import json
 from PySide2.QtCore import *
@@ -42,7 +43,7 @@ class Http_API(object):
         self.send_text = json_str
         self.write_log("send ING")
         self.write_log(self.send_text)
-        response = requests.post(url=url, data=json.dumps(data))
+        response = requests.post(url=url, data=json.dumps(data), timeout=10)
         self.send_response = response
         print("RETURN response：", response.text)
         self.write_log("RETURN response")
@@ -181,21 +182,33 @@ class ThreadForQT(QThread):
                 sub_id=sub_id)
         elif self. command_num == 7:
             # 7 command（"ROOT"）
-            print("self.command_vrg==", self.command_vrg)
-            ret = self.set_unlock(ip=ip, port=port, sub_id=sub_id)
-            print("ret", ret)
-            if ret == 0:
-                # Only if it receives a return value that understands the lock
-                # success
-                ret = self.set_ota_flash(
-                    sha256sum=self.command_vrg["sha256sum"],
-                    sever_ip=self.command_vrg["sever_ip"],
-                    sever_port=self. command_vrg["sever_port"],
-                    ip=ip,
-                    port=port,
-                    sub_id=sub_id)
+            ret=self.get_signal_intensity(ip=ip,port=port,sub_id=sub_id)
+		elif self. command_num==8:
+			#8命令（获取设备状态信息）
+			ret=self.get_dev_info_api(ip=ip,port=port,sub_id=sub_id)
+		elif self. command_num==9:
+			#9命令（解锁ota）
+			print("self.command_vrg==",self.command_vrg)
+			ret=self.set_unlock(ip=ip,port=port,sub_id=sub_id)
+			print("ret",ret)
+			if ret['error'] == 0:
+			#10命令（发送升级信息）
+				 ret=self.set_ota_flash(sha256sum= self.command_vrg["sha256sum"], sever_ip= self.command_vrg["sever_ip"], sever_port=self. command_vrg["sever_port"], ip=ip, port=port, sub_id=sub_id)
         return ret
-
+		
+    def send_data(self, send_url, send_data):
+		"""
+		send data to device by HTTP PORT
+		"""
+		#try:
+			print("send：",send_url,str(send_data))
+			response =self.ht.postRequest(send_url,send_data)
+			print("response：",str(response))
+			if response["result"]:
+				return json.loads(response["text"])
+			else:
+				return 1
+					
     def set_OUT(self, **info):
         """
         Set the lights on and off
@@ -219,26 +232,12 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        if out_sta:
-            data["data"] = '{\"switch\": \"on\"}'
-        else:
-            data["data"] = '{\"switch\": \"off\"}'
+		if out_sta:
+			data["data"]=	{"switch": "on"}
+		else:
+			data["data"]=	{"switch": "off"}
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s发送数据：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("接收到数据：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def set_power_up_state(self, **info):
         """
@@ -263,28 +262,14 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        if state == 0:
-            data["data"] = '{\"startup\": \"off\"}'
-        elif state == 1:
-            data["data"] = '{\"startup\": \"on\"}'
-        elif state == 2:
-            data["data"] = '{\"startup\": \"stay\"}'
+		if(state== 0):
+			data["data"]=	{"startup": "off"}
+		elif (state== 1):
+			data["data"]=	{"startup": "on"}
+		elif (state== 2):
+			data["data"]=	{"startup": "stay"}
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def get_signal_intensity(self, **info):
         """
@@ -307,23 +292,9 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        data["data"] = r'{\n\}'
+        data["data"] = { }
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def set_point_sewidth(self, **info):
         """
@@ -350,24 +321,9 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        data["data"] = '{\"pulse\": \"' + pulse + \
-            '\",\"pulseWidth\": ' + str(pulseWidth) + '}'
+        data["data"]=	{"pulse": pulse,"pulseWidth": pulseWidth}
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def set_wifi(self, **info):
         """
@@ -394,24 +350,9 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        data["data"] = '{\"ssid\": \"' + ssid + \
-            '\",\"password\": \"' + password + '\"}'
+        data["data"]=	{"ssid": ssid, "password":  password}
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def set_unlock(self, **info):
         """
@@ -435,23 +376,9 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        data["data"] = '{\n\n}'
+		data["data"]=	{ }
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
 
     def set_ota_flash(self, **info):
         """
@@ -478,21 +405,21 @@ class ThreadForQT(QThread):
         data["sequence"] = str(int(time.time()))
         sub_id = info["sub_id"]
         data["deviceid"] = sub_id
-        data["encrypt"] = False
-        data["iv"] = "1234567890123456"
-        data["selfApikey"] = "123"
-        data["data"] = '{\"downloadUrl\":\"http://' + info["sever_ip"] + ':' + str(
-            info["sever_port"]) + '/itead.bin",\"sha256sum\":\"' + info["sha256sum"] + '"}'
+		data["data"]=	{ }
         # 3. Call Http_API(postRequest) to send.
-        try:
-            print("%s SEND：%s" % (url, str(data)))
-            response = self.ht.postRequest(url, data)
-            print("response：", str(response))
-            if response["result"]:
-                if json.loads(response["text"])["error"] != 0:
-                    return 1
-                return 0
-            else:
-                return 1
-        except BaseException:
-            return 1
+        return self.send_data(send_url=url, send_data=data)
+
+
+    def get_dev_info_api(self,**info):
+        """
+        get device info 
+        """
+        sub_dict=info
+        data={}
+        #把组装好url
+        url="http://"+info["ip"]+":"+str(info["port"])+"/zeroconf/info"
+        #组装好data
+        sub_id=info["sub_id"]
+        data["deviceid"]=sub_id
+        data["data"]=	{ }
+        return self.send_data(send_url=url, send_data=data)
