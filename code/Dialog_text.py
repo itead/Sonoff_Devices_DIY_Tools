@@ -266,13 +266,19 @@ class resultDialog(QDialog):
         grid = QGridLayout()
         num = 0
         for x in all_info.keys():
-            print(x)
             sub_name = QLabel(parent=self)
             sub_name.setText(x)
             grid.addWidget(sub_name, num, 0, 1, 1)
             sub_ret = QLabel(parent=self)
-            sub_ret.setText(all_info[x])
+            data = all_info[x]
+            if data['error'] == 0:
+                sub_ret.setText("succeed")
+            else:
+                sub_ret.setText("error")
             grid.addWidget(sub_ret, num, 1, 1, 1)
+            sub_info = QLabel(parent=self)
+            sub_info.setText(str(all_info[x]))
+            grid.addWidget(sub_info, num, 2, 2, 1)
             num += 1
         buttonbox = QDialogButtonBox(parent=self)
         buttonbox.setOrientation(Qt.Horizontal)
