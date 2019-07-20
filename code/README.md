@@ -1,4 +1,4 @@
-# /code
+# /code（3.3.0）
 
 ------
 
@@ -43,3 +43,5 @@ This module is mainly used to send HTTP(POST) requests to devices
 This module is dedicated to MDNS
 
 ### requirements.txt
+
+Python runs the required libraries
