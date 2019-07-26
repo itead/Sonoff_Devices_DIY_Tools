@@ -198,8 +198,8 @@ class ThreadForQT(QThread):
 		
     def send_data(self, send_url, send_data):
 		"""
-		send data to device by HTTP PORT
-		"""
+                send data to device by HTTP PORT
+                """
 		#try:
 			print("send：",send_url,str(send_data))
 			response =self.ht.postRequest(send_url,send_data)
