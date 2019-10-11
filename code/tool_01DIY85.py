@@ -9,6 +9,7 @@
 
 import sys
 import time
+import os
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from tool_01DIY85_ui import *
@@ -430,7 +431,7 @@ class MainWindow(QMainWindow):
             return
         result_list = result_str.split("\n")
         print("The return value is received：", result_list)
-		self.send_result[result_list[0]]=eval(result_list[1])
+        self.send_result[result_list[0]]=eval(result_list[1])
 
 
     def run_detection(self, command_num, **comand_vrg):

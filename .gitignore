@@ -1,0 +1,5 @@
+code/.python-version
+code/.vscode/
+code/__pycache__/
+code/*.pyc
+
