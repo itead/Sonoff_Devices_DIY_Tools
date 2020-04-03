@@ -365,7 +365,7 @@ class MainWindow(QMainWindow):
             # Fill in the "Inching" button
             b_inch = QTableWidgetItem("Inching")
             self.ui.tableWidget.setItem(line_num, 7, b_inch)
-			# rssi
+            # rssi
             newresultBItem=QTableWidgetItem(str(sub_sta_info["rssi"]))
             self.ui.tableWidget.setItem(line_num,8,newresultBItem)
             # Color according to the device information
@@ -430,7 +430,7 @@ class MainWindow(QMainWindow):
             return
         result_list = result_str.split("\n")
         print("The return value is received：", result_list)
-		self.send_result[result_list[0]]=eval(result_list[1])
+        self.send_result[result_list[0]]=eval(result_list[1])
 
 
     def run_detection(self, command_num, **comand_vrg):
