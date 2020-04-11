@@ -516,7 +516,7 @@ class RootDialog(QDialog):
         Select the firmware
                 Select the firmware, copy the user's firmware to the current working directory,
                 and calculate the SHA256 value of the file, and verify whether the file is Dout,
-                and the firmware size is less than 508k,
+                and the firmware size is less than 608k,
                 and whether it is a ".bin "file
         :return:
         """
@@ -554,19 +554,19 @@ class RootDialog(QDialog):
                 QMessageBox.information(
                     self,
                     "ERROR",
-                    "Firmware file cannot be greater than 508k; The firmware must be Dout",
+                    "Firmware file cannot be greater than 608k; The firmware must be Dout",
                     QMessageBox.Yes,
                     QMessageBox.Yes)
 
     def get_file_to_work(self, bin_file):
         """
         calculate the SHA256 value of the file, and verify whether the file is Dout,
-        and the firmware size is less than 508k,
+        and the firmware size is less than 608k,
         """
         try:
             with open(bin_file, 'rb') as file_obj:
                 b = bytearray(file_obj.read())
-                if (b[2] == 3)and(len(b) < 508000):
+                if (b[2] == 3)and(len(b) < 608000):
                     file_obj.seek(0, 0)
                     img = file_obj.read()
                 else:
