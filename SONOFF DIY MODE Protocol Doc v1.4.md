@@ -422,6 +422,8 @@ e.g.
 
 #### 6. OTA Function Unlocking
 
+Unlocks the device for firmware upgrades and indicates that the device is no longer under manufacturer's warranty.
+
 **URL:** http://[ip]:[port]/zeroconf/ota_unlock
 
 **Return value format:** json
@@ -451,6 +453,8 @@ The following failure codes are added to the error field of the response body:
 
 #### 7. OTA New Firmware
 
+Updates the firmware on the device from a _local_ HTTP server (i.e. not Internet) that supports Range request header (e.g. Apache).
+
 **URL: **http://[ip]:[port]/zeroconf/ota_flash 
 
 **Return value format:** json
@@ -471,7 +475,7 @@ e.g.
 
 |  Attribute  |  Type  | Optional | Description                                                  |
 | :---------: | :----: | :------: | :----------------------------------------------------------- |
-| downloadUrl | String |    No    | The download address of the new firmware, only supports the HTTP protocol, the HTTP server must support the Range request header. |
+| downloadUrl | String |    No    | The download address of the new firmware, only supports the HTTP protocol, the HTTP server must support the Range request header. The new firmware server must be re-hosted on the same subnet as the device.  |
 |  sha256sum  | String |    No    | SHA256 checksum (hash) of the new firmware, it is used to verify the integrity of the new firmware downloaded |
 
 The following failure codes are added to the error field of the response body:
