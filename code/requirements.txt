@@ -20,7 +20,7 @@ pyserial==3.4
 PySide2==5.12.0
 pywin32-ctypes==0.2.0
 requests==2.21.0
-setuptools==40.6.2
+setuptools==65.5.1
 shiboken2==5.12.0
 six==1.12.0
 websocket-client-py3==0.15.0
